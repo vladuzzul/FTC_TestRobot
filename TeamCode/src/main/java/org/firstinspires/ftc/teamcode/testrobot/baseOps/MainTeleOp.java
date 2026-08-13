@@ -95,7 +95,6 @@ public abstract class MainTeleOp extends OpMode {
                 selectedStartPose.getX(), selectedStartPose.getY(),
                 Math.toDegrees(selectedStartPose.getHeading()));
         telemetry.addLine("Select start left-right arrow");
-        telemetry.addLine("După START: A = centru, B = manual");
         telemetry.update();
     }
 }
