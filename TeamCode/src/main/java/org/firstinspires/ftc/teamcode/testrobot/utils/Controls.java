@@ -12,6 +12,7 @@ public final class Controls {
     public final Button dpadRight = new Button();
     public final Button dpadDown = new Button();
     public final Button dpadUp = new Button();
+    public final Button leftStickButton = new Button();
 
 
     public double leftStickX;
@@ -29,6 +30,7 @@ public final class Controls {
         dpadRight.update(gamepad.dpad_right);
         dpadDown.update(gamepad.dpad_down);
         dpadUp.update(gamepad.dpad_up);
+        leftStickButton.update(gamepad.left_stick_button);
 
         leftStickX = gamepad.left_stick_x;
         leftStickY = gamepad.left_stick_y;

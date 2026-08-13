@@ -62,6 +62,15 @@ public abstract class MainTeleOp extends OpMode {
             robot.drive.startManual();
         }
 
+        if (controls.leftStickButton.justPressed()){
+            if (robot.follower.getPose().getX() < 72){
+                robot.follower.setPose(new Pose(9, 9, Math.PI/2));
+            }
+            else {
+                robot.follower.setPose(new Pose(135, 9, Math.PI/2));
+            }
+        }
+
         robot.drive.runManual(controls);
         onRobotLoop();
         robot.updateAllSystems();
