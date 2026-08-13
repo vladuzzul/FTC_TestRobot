@@ -92,10 +92,10 @@ public class Tuning extends SelectableOpMode {
     @Override
     public void onSelect() {
         if (follower == null) {
-            follower = Constants.createFollower(hardwareMap);
+            follower = org.firstinspires.ftc.teamcode.pedroPathing.Constants.createFollower(hardwareMap);
             PanelsConfigurables.INSTANCE.refreshClass(this);
         } else {
-            follower = Constants.createFollower(hardwareMap);
+            follower = org.firstinspires.ftc.teamcode.pedroPathing.Constants.createFollower(hardwareMap);
         }
 
         follower.setStartingPose(new Pose());
@@ -1603,7 +1603,7 @@ class SwerveTurnTest extends OpMode {
 /**
  * This is the OffsetsTuner OpMode. This tracks the movement of the robot as it turns 180 degrees,
  * and calculates what the robot's strafeX and forwardY offsets should be. Ensure that your strafeX and forwardY offsets
- * are set to 0 before running this OpMode. After running, input the displayed offsets into your localizer constants.
+ * are set to 0 before running this OpMode. After running, input the displayed offsets into your localizer Constants.
  *
  * @author Havish Sripada - 12808 RevAmped Robotics
  * @author Baron Henderson
@@ -1619,7 +1619,7 @@ class OffsetsTuner extends OpMode {
     /** This initializes the PoseUpdater as well as the Panels telemetry. */
     @Override
     public void init_loop() {
-        telemetryM.debug("Prerequisite: Make sure both your offsets are set to 0 in your localizer constants.");
+        telemetryM.debug("Prerequisite: Make sure both your offsets are set to 0 in your localizer Constants.");
         telemetryM.debug("Turn your robot " + Math.PI + " radians. Your offsets in inches will be shown on the telemetry.");
         telemetryM.update(telemetry);
 

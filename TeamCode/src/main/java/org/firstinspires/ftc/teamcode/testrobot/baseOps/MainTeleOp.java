@@ -1,0 +1,96 @@
+package org.firstinspires.ftc.teamcode.testrobot.baseOps;
+
+import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import org.firstinspires.ftc.teamcode.testrobot.Robot;
+import org.firstinspires.ftc.teamcode.testrobot.autonomous.AutonomousConstants;
+import org.firstinspires.ftc.teamcode.testrobot.utils.Controls;
+
+/** Shared lifecycle and driver controls for TestRobot TeleOp programs. */
+public abstract class MainTeleOp extends OpMode {
+    protected final Robot robot = Robot.getInstance();
+    protected Controls controls;
+
+    private Pose selectedStartPose;
+
+    @Override
+    public void init() {
+        controls = new Controls(gamepad1);
+        selectedStartPose = AutonomousConstants.leftStartPose();
+        robot.init(hardwareMap, selectedStartPose);
+        onRobotInit();
+        initTelemetry();
+    }
+
+    @Override
+    public void init_loop() {
+        controls.update();
+
+        if (controls.dpadLeft.justPressed()) {
+            selectedStartPose = AutonomousConstants.leftStartPose();
+            robot.setPose(selectedStartPose);
+        } else if (controls.dpadRight.justPressed()) {
+            selectedStartPose = AutonomousConstants.rightStartPose();
+            robot.setPose(selectedStartPose);
+        }
+
+        robot.updateAllSystems();
+        initTelemetry();
+    }
+
+    @Override
+    public void start() {
+        robot.drive.startManual();
+        onRobotStart();
+    }
+
+    @Override
+    public void loop() {
+        controls.update();
+
+        if (controls.a.justPressed()) {
+            robot.drive.driveTo(AutonomousConstants.centerPose());
+        }
+
+        if (controls.b.justPressed()) {
+            robot.drive.startManual();
+        }
+
+        robot.drive.runManual(controls);
+        onRobotLoop();
+        robot.updateAllSystems();
+
+        robot.drive.telemetry(telemetry);
+        telemetry.addLine("A: centru | B: control manual");
+        telemetry.update();
+    }
+
+    @Override
+    public void stop() {
+        robot.stop();
+        onRobotStop();
+    }
+
+    protected void onRobotInit() {
+    }
+
+    protected void onRobotStart() {
+    }
+
+    protected void onRobotLoop() {
+    }
+
+    protected void onRobotStop() {
+    }
+
+    private void initTelemetry() {
+        telemetry.addData("Status", "Initialized");
+        telemetry.addData("Selected start", "(%.1f, %.1f, %.0f deg)",
+                selectedStartPose.getX(), selectedStartPose.getY(),
+                Math.toDegrees(selectedStartPose.getHeading()));
+        telemetry.addLine("În INIT: D-pad stânga/dreapta selectează startul");
+        telemetry.addLine("După START: A = centru, B = manual");
+        telemetry.update();
+    }
+}
