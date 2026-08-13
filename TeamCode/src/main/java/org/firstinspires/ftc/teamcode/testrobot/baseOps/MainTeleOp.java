@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.testrobot.Robot;
 import org.firstinspires.ftc.teamcode.testrobot.autonomous.AutonomousConstants;
 import org.firstinspires.ftc.teamcode.testrobot.utils.Controls;
+import org.firstinspires.ftc.teamcode.testrobot.utils.PoseStorage;
 
 /** Shared lifecycle and driver controls for TestRobot TeleOp programs. */
 public abstract class MainTeleOp extends OpMode {
@@ -33,6 +34,9 @@ public abstract class MainTeleOp extends OpMode {
         } else if (controls.dpadRight.justPressed()) {
             selectedStartPose = AutonomousConstants.rightStartPose();
             robot.setPose(selectedStartPose);
+        }
+        else if (controls.dpadDown.justPressed()) {
+            selectedStartPose = PoseStorage.loadPose();
         }
 
         robot.updateAllSystems();
@@ -62,12 +66,13 @@ public abstract class MainTeleOp extends OpMode {
         robot.updateAllSystems();
 
         robot.drive.telemetry(telemetry);
-        telemetry.addLine("A: centru | B: control manual");
+        telemetry.addLine("A -> Go to center, B -> Manual");
         telemetry.update();
     }
 
     @Override
     public void stop() {
+        PoseStorage.savePose(robot.follower.getPose());
         robot.stop();
         onRobotStop();
     }
@@ -89,7 +94,7 @@ public abstract class MainTeleOp extends OpMode {
         telemetry.addData("Selected start", "(%.1f, %.1f, %.0f deg)",
                 selectedStartPose.getX(), selectedStartPose.getY(),
                 Math.toDegrees(selectedStartPose.getHeading()));
-        telemetry.addLine("În INIT: D-pad stânga/dreapta selectează startul");
+        telemetry.addLine("Select start left-right arrow");
         telemetry.addLine("După START: A = centru, B = manual");
         telemetry.update();
     }

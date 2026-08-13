@@ -10,6 +10,9 @@ public final class Controls {
     public final Button b = new Button();
     public final Button dpadLeft = new Button();
     public final Button dpadRight = new Button();
+    public final Button dpadDown = new Button();
+    public final Button dpadUp = new Button();
+
 
     public double leftStickX;
     public double leftStickY;
