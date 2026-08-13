@@ -37,6 +37,7 @@ public abstract class MainTeleOp extends OpMode {
         }
         else if (controls.dpadDown.justPressed()) {
             selectedStartPose = PoseStorage.loadPose();
+            robot.setPose(selectedStartPose);
         }
 
         robot.updateAllSystems();
@@ -64,6 +65,7 @@ public abstract class MainTeleOp extends OpMode {
         robot.drive.runManual(controls);
         onRobotLoop();
         robot.updateAllSystems();
+        onRobotUpdated();
 
         robot.drive.telemetry(telemetry);
         telemetry.addLine("A -> Go to center, B -> Manual");
@@ -72,6 +74,7 @@ public abstract class MainTeleOp extends OpMode {
 
     @Override
     public void stop() {
+        onRobotStopping();
         PoseStorage.savePose(robot.follower.getPose());
         robot.stop();
         onRobotStop();
@@ -84,6 +87,14 @@ public abstract class MainTeleOp extends OpMode {
     }
 
     protected void onRobotLoop() {
+    }
+
+    /** Called once per loop after every robot system has been updated. */
+    protected void onRobotUpdated() {
+    }
+
+    /** Called while the final live robot state is still available. */
+    protected void onRobotStopping() {
     }
 
     protected void onRobotStop() {

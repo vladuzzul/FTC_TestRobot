@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.testrobot.utils.components.DriveController;
 
-/** Robot-level facade. Add future subsystems here, next to {@link #drive}. */
 public final class Robot extends TestRobot {
     private static Robot instance;
 

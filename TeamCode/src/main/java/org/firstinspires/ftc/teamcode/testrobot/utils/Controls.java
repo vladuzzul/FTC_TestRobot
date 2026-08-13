@@ -27,6 +27,8 @@ public final class Controls {
         b.update(gamepad.b);
         dpadLeft.update(gamepad.dpad_left);
         dpadRight.update(gamepad.dpad_right);
+        dpadDown.update(gamepad.dpad_down);
+        dpadUp.update(gamepad.dpad_up);
 
         leftStickX = gamepad.left_stick_x;
         leftStickY = gamepad.left_stick_y;
