@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.testrobot.Robot;
 import org.firstinspires.ftc.teamcode.testrobot.utils.PoseStorage;
+import org.firstinspires.ftc.teamcode.testrobot.utils.RecordingFormat;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,8 +23,8 @@ import java.util.List;
 /** Replays the 18-column CSV written by RecorderOp. */
 @Autonomous(name = "Replay", group = "Replay")
 public class ReplayOp extends LinearOpMode {
-    private static final String CSV_FILE_NAME = "robot_recording.csv";
-    private static final int CSV_COLUMN_COUNT = 18;
+    private static final String CSV_FILE_NAME = RecordingFormat.FILE_NAME;
+    private static final int CSV_COLUMN_COUNT = RecordingFormat.COLUMN_COUNT;
 
     private static final int MODE_MANUAL = 0;
     private static final int MODE_FOLLOWING_PATH = 1;
@@ -100,6 +101,8 @@ public class ReplayOp extends LinearOpMode {
         double filteredVelocityErrorY = 0;
         double filteredOmegaError = 0;
         double peakPositionError = 0;
+        double meanPositionError = 0;
+        double ticks = 0;
 
         replayTimer.reset();
 
@@ -197,14 +200,17 @@ public class ReplayOp extends LinearOpMode {
             robot.follower.setTeleOpDrive(
                     commandForward, commandStrafe, commandTurn, true);
             robot.updateAllSystems();
+            ticks++;
 
             double positionError = Math.hypot(errorFieldX, errorFieldY);
+            meanPositionError += positionError;
             peakPositionError = Math.max(peakPositionError, positionError);
             telemetry.addData("Time", "%.2f / %.2f s", now, replayDuration);
             telemetry.addData("Frame", "%d / %d", frameIndex + 1, frames.size());
             telemetry.addData("Recorded mode", modeName(a.driveMode));
             telemetry.addData("Recorded event", eventName(a));
             telemetry.addData("Position error", "%.2f in", positionError);
+            telemetry.addData("Mean error", "%.2f in", meanPositionError / ticks);
             telemetry.addData("Peak error", "%.2f in", peakPositionError);
             telemetry.addData("Heading error", "%.1f deg",
                     Math.toDegrees(Math.abs(headingError)));

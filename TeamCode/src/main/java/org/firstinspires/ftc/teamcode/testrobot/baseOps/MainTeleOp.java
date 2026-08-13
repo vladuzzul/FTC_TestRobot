@@ -64,10 +64,10 @@ public abstract class MainTeleOp extends OpMode {
 
         if (controls.leftStickButton.justPressed()){
             if (robot.follower.getPose().getX() < 72){
-                robot.follower.setPose(new Pose(9, 9, Math.PI/2));
+                robot.follower.setPose(AutonomousConstants.leftStartPose());
             }
             else {
-                robot.follower.setPose(new Pose(135, 9, Math.PI/2));
+                robot.follower.setPose(AutonomousConstants.rightStartPose());
             }
         }
 
@@ -114,7 +114,7 @@ public abstract class MainTeleOp extends OpMode {
         telemetry.addData("Selected start", "(%.1f, %.1f, %.0f deg)",
                 selectedStartPose.getX(), selectedStartPose.getY(),
                 Math.toDegrees(selectedStartPose.getHeading()));
-        telemetry.addLine("Select start left-right arrow");
+        telemetry.addLine("Select starting position using d-pad");
         telemetry.update();
     }
 }

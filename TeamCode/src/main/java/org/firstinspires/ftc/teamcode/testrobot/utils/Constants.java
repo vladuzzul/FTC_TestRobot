@@ -3,11 +3,10 @@ package org.firstinspires.ftc.teamcode.testrobot.utils;
 /** Constants shared by TestRobot OpModes and components. */
 public final class Constants {
     public static final String MAIN_GROUP = "TestRobot";
-    public static final String TEST_GROUP = "TestRobot Tests";
 
     public static double CONTROLLER_DEADZONE = 0.05;
     public static double MANUAL_SPEED = 1.0;
-    public static double PATH_MAX_POWER = 0.6;
+    public static double PATH_MAX_POWER = 1;
 
     private Constants() {
     }
