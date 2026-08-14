@@ -14,6 +14,8 @@ public final class DriveController {
     private final Robot robot;
     private Pose targetPose;
 
+    private boolean fieldCentric = false;
+
     public DriveController(Robot robot) {
         this.robot = robot;
     }
@@ -37,7 +39,7 @@ public final class DriveController {
                 Constants.applyDeadzone(-controls.leftStickY),
                 Constants.applyDeadzone(-controls.leftStickX),
                 Constants.applyDeadzone(-controls.rightStickX),
-                true);
+                !fieldCentric);
     }
 
     public void driveTo(Pose destination) {
@@ -52,6 +54,13 @@ public final class DriveController {
                 .build();
 
         robot.follower.followPath(path, Constants.PATH_MAX_POWER, true);
+    }
+
+    public void toggleFieldCentric(){
+        fieldCentric = !fieldCentric;
+    }
+    public boolean isFieldCentric(){
+        return fieldCentric;
     }
 
     public boolean isManual() {

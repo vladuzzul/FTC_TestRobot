@@ -63,7 +63,7 @@ public class RecorderOp extends MainTeleOp {
     @Override
     protected void onRobotUpdated() {
         double sampleTime = recordTimer.seconds();
-        boolean importantEvent = controls.a.justPressed() || controls.b.justPressed();
+        boolean importantEvent = controls.cross.justPressed() || controls.circle.justPressed();
         recordFrame(sampleTime, importantEvent);
     }
 
@@ -142,8 +142,8 @@ public class RecorderOp extends MainTeleOp {
                 driveStr,
                 driveTurn,
                 driveMode,
-                controls.a.justPressed() ? 1 : 0,
-                controls.b.justPressed() ? 1 : 0,
+                controls.cross.justPressed() ? 1 : 0,
+                controls.circle.justPressed() ? 1 : 0,
                 velocityX,
                 velocityY,
                 angularVelocity

@@ -6,8 +6,11 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 public final class Controls {
     private final Gamepad gamepad;
 
-    public final Button a = new Button();
-    public final Button b = new Button();
+    public final Button cross = new Button();
+    public final Button circle = new Button();
+    public final Button triangle = new Button();
+
+    public final Button square = new Button();
     public final Button dpadLeft = new Button();
     public final Button dpadRight = new Button();
     public final Button dpadDown = new Button();
@@ -25,8 +28,10 @@ public final class Controls {
     }
 
     public void update() {
-        a.update(gamepad.a);
-        b.update(gamepad.b);
+        cross.update(gamepad.cross);
+        circle.update(gamepad.circle);
+        triangle.update(gamepad.triangle);
+        square.update(gamepad.square);
         dpadLeft.update(gamepad.dpad_left);
         dpadRight.update(gamepad.dpad_right);
         dpadDown.update(gamepad.dpad_down);

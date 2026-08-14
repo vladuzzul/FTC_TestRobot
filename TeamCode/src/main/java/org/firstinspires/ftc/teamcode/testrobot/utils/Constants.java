@@ -8,6 +8,10 @@ public final class Constants {
     public static double MANUAL_SPEED = 1.0;
     public static double PATH_MAX_POWER = 1;
 
+    public static double COMMON_BASKET_Y = 130.34;
+    public static double BLUE_BASKET_X = 16.36;
+    public static double RED_BASKET_X = 127.64;
+
     private Constants() {
     }
 

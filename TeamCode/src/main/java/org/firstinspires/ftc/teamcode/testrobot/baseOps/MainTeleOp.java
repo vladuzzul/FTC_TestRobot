@@ -54,12 +54,16 @@ public abstract class MainTeleOp extends OpMode {
     public void loop() {
         controls.update();
 
-        if (controls.a.justPressed()) {
+        if (controls.cross.justPressed() && !robot.drive.isFieldCentric()) {
             robot.drive.driveTo(AutonomousConstants.centerPose());
         }
 
-        if (controls.b.justPressed()) {
+        if (controls.circle.justPressed()) {
             robot.drive.startManual();
+        }
+
+        if (controls.triangle.justPressed() && robot.drive.isManual()){
+            robot.drive.toggleFieldCentric();
         }
 
         if (controls.leftStickButton.justPressed()){
