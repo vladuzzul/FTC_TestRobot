@@ -46,6 +46,7 @@ public abstract class MainTeleOp extends OpMode {
 
     @Override
     public void start() {
+        controls.startRgbEffect();
         robot.drive.startManual();
         onRobotStart();
     }

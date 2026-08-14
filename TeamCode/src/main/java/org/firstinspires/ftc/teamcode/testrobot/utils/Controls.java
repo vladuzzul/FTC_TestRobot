@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.testrobot.utils;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 /** Snapshot of driver inputs with rising-edge button detection. */
@@ -18,13 +20,37 @@ public final class Controls {
     public final Button leftStickButton = new Button();
     public final Button rightStickButton = new Button();
 
-
+    private static final int RGB_STEPS = 24;
+    private static final int RGB_STEP_MS = 75;
+    private static final Gamepad.LedEffect RGB_EFFECT = buildRgbEffect();
     public double leftStickX;
     public double leftStickY;
     public double rightStickX;
 
     public Controls(Gamepad gamepad) {
         this.gamepad = gamepad;
+    }
+
+    public void startRgbEffect() {
+        gamepad.runLedEffect(RGB_EFFECT);
+    }
+
+    private static Gamepad.LedEffect buildRgbEffect() {
+        Gamepad.LedEffect.Builder builder = new Gamepad.LedEffect.Builder()
+                .setRepeating(true);
+
+        for (int i = 0; i < RGB_STEPS; i++) {
+            float hue = 360f * i / RGB_STEPS;
+            int color = Color.HSVToColor(new float[]{hue, 1f, 1f});
+
+            builder.addStep(
+                    Color.red(color) / 255.0,
+                    Color.green(color) / 255.0,
+                    Color.blue(color) / 255.0,
+                    RGB_STEP_MS);
+        }
+
+        return builder.build();
     }
 
     public void update() {
@@ -38,6 +64,7 @@ public final class Controls {
         dpadUp.update(gamepad.dpad_up);
         leftStickButton.update(gamepad.left_stick_button);
         rightStickButton.update(gamepad.right_stick_button);
+
 
         leftStickX = gamepad.left_stick_x;
         leftStickY = gamepad.left_stick_y;
@@ -60,5 +87,6 @@ public final class Controls {
         public boolean justPressed() {
             return current && !previous;
         }
+
     }
 }
