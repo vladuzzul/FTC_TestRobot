@@ -66,6 +66,20 @@ public abstract class MainTeleOp extends OpMode {
             robot.drive.toggleFieldCentric();
         }
 
+        if (controls.square.justPressed() && robot.drive.isManual()){
+            // I'm so fucking sorry, n-am mai stat sa fac inca o functie pentru toggling isAiming.
+            if (!robot.drive.isAiming()) {
+                robot.drive.startAiming();
+            }
+            else {
+                robot.drive.stopAiming();
+            }
+        }
+
+        if (controls.rightStickButton.justPressed() && robot.drive.isAiming()){
+            robot.drive.toggleAimingTarget();
+        }
+
         if (controls.leftStickButton.justPressed()){
             if (robot.follower.getPose().getX() < 72){
                 robot.follower.setPose(AutonomousConstants.leftStartPose());
