@@ -63,7 +63,11 @@ public class RecorderOp extends MainTeleOp {
     @Override
     protected void onRobotUpdated() {
         double sampleTime = recordTimer.seconds();
-        boolean importantEvent = controls.cross.justPressed() || controls.circle.justPressed();
+        boolean importantEvent = controls.cross.justPressed()
+                || controls.circle.justPressed()
+                || controls.triangle.justPressed()
+                || controls.square.justPressed()
+                || controls.rightStickButton.justPressed();
         recordFrame(sampleTime, importantEvent);
     }
 
@@ -128,7 +132,7 @@ public class RecorderOp extends MainTeleOp {
 
         dataRecorder.write(String.format(Locale.US,
                 "%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.2f,"
-                        + "%.4f,%.4f,%.4f,%d,%d,%d,%.4f,%.4f,%.4f\n",
+                        + "%.4f,%.4f,%.4f,%d,%d,%d,%.4f,%.4f,%.4f,%d,%d,%d\n",
                 t,
                 leftRear.getPower(),
                 rightRear.getPower(),
@@ -146,7 +150,10 @@ public class RecorderOp extends MainTeleOp {
                 controls.circle.justPressed() ? 1 : 0,
                 velocityX,
                 velocityY,
-                angularVelocity
+                angularVelocity,
+                robot.drive.isFieldCentric() ? 1 : 0,
+                robot.drive.isAiming() ? 1 : 0,
+                robot.drive.aimingAtBlue ? 1 : 0
         ));
     }
 

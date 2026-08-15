@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.testrobot.Robot;
+import org.firstinspires.ftc.teamcode.testrobot.utils.Constants;
 import org.firstinspires.ftc.teamcode.testrobot.utils.PoseStorage;
 import org.firstinspires.ftc.teamcode.testrobot.utils.RecordingFormat;
 
@@ -20,7 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Replays the 18-column CSV written by RecorderOp. */
+/** Replays the 21-column CSV written by RecorderOp. */
 @Autonomous(name = "Replay", group = "Replay")
 public class ReplayOp extends LinearOpMode {
     private static final String CSV_FILE_NAME = RecordingFormat.FILE_NAME;
@@ -42,6 +43,8 @@ public class ReplayOp extends LinearOpMode {
     private static final double MAX_VOLTAGE_SCALE = 1.10;
     private static final double VOLTAGE_REFRESH_SEC = 0.10;
     private static final double MIN_DT = 0.008;
+    private static final double AIM_KP = 1.0;
+    private static final double AIM_DEADBAND_RAD = Math.toRadians(2.0);
 
     private final Robot robot = Robot.getInstance();
     private final List<RobotFrame> frames = new ArrayList<>();
@@ -135,6 +138,11 @@ public class ReplayOp extends LinearOpMode {
                     : 1.0;
 
             DriveCommand feedforward = interpolateFeedforward(a, b, interpolation);
+            // Field-centric input and target lock only affect manual driving.
+            // Path/pose feedforward is already in the robot coordinate frame.
+            boolean manualDrive = a.driveMode == MODE_MANUAL;
+            boolean fieldCentric = manualDrive && a.fieldCentric;
+            boolean aimingAtTarget = manualDrive && a.aimingAtTarget;
             feedforward.scale(voltageScale);
 
             Pose currentPose = robot.follower.getPose();
@@ -186,10 +194,14 @@ public class ReplayOp extends LinearOpMode {
                             + filteredOmegaError * ROTATION_KD,
                     -MAX_ROTATION_CORRECTION, MAX_ROTATION_CORRECTION);
 
-            double commandForward = feedforward.forward + correctionForward;
-            double commandStrafe = feedforward.strafe + correctionStrafe;
+            double commandForward = feedforward.forward
+                    + (fieldCentric ? correctionFieldX : correctionForward);
+            double commandStrafe = feedforward.strafe
+                    + (fieldCentric ? correctionFieldY : correctionStrafe);
             double commandTurn = Range.clip(
-                    feedforward.turn + correctionTurn, -1, 1);
+                    (aimingAtTarget ? aimTurn(currentPose, a.aimingAtBlue)
+                            : feedforward.turn) + correctionTurn,
+                    -1, 1);
             double translationMagnitude = Math.hypot(
                     commandForward, commandStrafe);
             if (translationMagnitude > 1) {
@@ -198,7 +210,7 @@ public class ReplayOp extends LinearOpMode {
             }
 
             robot.follower.setTeleOpDrive(
-                    commandForward, commandStrafe, commandTurn, true);
+                    commandForward, commandStrafe, commandTurn, !fieldCentric);
             robot.updateAllSystems();
             ticks++;
 
@@ -208,6 +220,8 @@ public class ReplayOp extends LinearOpMode {
             telemetry.addData("Time", "%.2f / %.2f s", now, replayDuration);
             telemetry.addData("Frame", "%d / %d", frameIndex + 1, frames.size());
             telemetry.addData("Recorded mode", modeName(a.driveMode));
+            telemetry.addData("Drive frame", fieldCentric ? "Field centric" : "Robot centric");
+            telemetry.addData("Target lock", targetLockName(a));
             telemetry.addData("Recorded event", eventName(a));
             telemetry.addData("Position error", "%.2f in", positionError);
             telemetry.addData("Mean error", "%.2f in", meanPositionError / ticks);
@@ -240,8 +254,11 @@ public class ReplayOp extends LinearOpMode {
             String[] headerColumns = header.split(",", -1);
             if (headerColumns.length != CSV_COLUMN_COUNT
                     || !"DriveMode".equals(headerColumns[12])
-                    || !"AngularVelocity".equals(headerColumns[17])) {
-                throw new IOException("Unsupported CSV format; expected RecorderOp 18-column data");
+                    || !"AngularVelocity".equals(headerColumns[17])
+                    || !"FieldCentric".equals(headerColumns[18])
+                    || !"AimingAtTarget".equals(headerColumns[19])
+                    || !"AimingAtBlue".equals(headerColumns[20])) {
+                throw new IOException("Unsupported CSV format; expected RecorderOp 21-column data");
             }
 
             String line;
@@ -291,7 +308,10 @@ public class ReplayOp extends LinearOpMode {
     private DriveCommand interpolateFeedforward(
             RobotFrame a, RobotFrame b, double amount) {
         DriveCommand commandA = a.feedforward();
-        if (a.driveMode != b.driveMode) {
+        if (a.driveMode != b.driveMode
+                || a.fieldCentric != b.fieldCentric
+                || a.aimingAtTarget != b.aimingAtTarget
+                || a.aimingAtBlue != b.aimingAtBlue) {
             return commandA;
         }
 
@@ -347,6 +367,23 @@ public class ReplayOp extends LinearOpMode {
         return "-";
     }
 
+    private static String targetLockName(RobotFrame frame) {
+        if (!frame.aimingAtTarget) return "Off";
+        return frame.aimingAtBlue ? "Blue" : "Red";
+    }
+
+    private static double aimTurn(Pose pose, boolean aimingAtBlue) {
+        double targetX = aimingAtBlue ? Constants.BLUE_BASKET_X : Constants.RED_BASKET_X;
+        double desiredHeading = Math.atan2(
+                Constants.COMMON_BASKET_Y - pose.getY(), targetX - pose.getX());
+        double error = normalizeAngle(desiredHeading - pose.getHeading());
+
+        if (Math.abs(error) < AIM_DEADBAND_RAD) {
+            return 0;
+        }
+        return Range.clip(AIM_KP * error, -1, 1);
+    }
+
     private static double lerp(double a, double b, double amount) {
         return a + (b - a) * amount;
     }
@@ -398,6 +435,9 @@ public class ReplayOp extends LinearOpMode {
         final double velocityX;
         final double velocityY;
         final double angularVelocity;
+        final boolean fieldCentric;
+        final boolean aimingAtTarget;
+        final boolean aimingAtBlue;
 
         RobotFrame(String[] values) {
             timestamp = Double.parseDouble(values[0]);
@@ -418,6 +458,9 @@ public class ReplayOp extends LinearOpMode {
             velocityX = Double.parseDouble(values[15]);
             velocityY = Double.parseDouble(values[16]);
             angularVelocity = Double.parseDouble(values[17]);
+            fieldCentric = parseBoolean(values[18]);
+            aimingAtTarget = parseBoolean(values[19]);
+            aimingAtBlue = parseBoolean(values[20]);
         }
 
         DriveCommand feedforward() {
