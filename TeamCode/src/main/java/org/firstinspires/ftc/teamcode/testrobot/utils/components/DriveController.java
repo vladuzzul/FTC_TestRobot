@@ -117,6 +117,7 @@ public final class DriveController {
 
         if (aimingAtTarget){
             telemetry.addData("Aiming at", aimingAtBlue ? "Blue" : "Red");
+            telemetry.addLine("Press R3 to switch target");
         }
     }
 

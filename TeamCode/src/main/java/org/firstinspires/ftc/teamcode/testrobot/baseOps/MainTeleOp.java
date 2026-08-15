@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.testrobot.baseOps;
 
-import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.INTAKE_POWER;
-
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -56,7 +54,7 @@ public abstract class MainTeleOp extends OpMode {
     public void loop() {
         controls.update();
 
-        if (controls.cross.justPressed() && !robot.drive.isFieldCentric()) {
+        if (controls.cross.justPressed() && !robot.drive.isFieldCentric() && !robot.drive.isAiming()) {
             robot.drive.driveTo(AutonomousConstants.centerPose());
         }
 
@@ -111,8 +109,8 @@ public abstract class MainTeleOp extends OpMode {
 
         robot.drive.telemetry(telemetry);
 //        robot.intake.telemetry(telemetry);
-        telemetry.addLine("X -> Go to center          O -> Manual");
-        telemetry.addLine("□ -> Toggle aiming target  △ -> Toggle field centric");
+        telemetry.addLine("X -> Go to center |  □ -> Toggle aiming target");
+        telemetry.addLine("O -> Manual       |  △ -> Toggle field centric");
         telemetry.update();
     }
 
@@ -145,11 +143,16 @@ public abstract class MainTeleOp extends OpMode {
     }
 
     private void initTelemetry() {
+        Pose savedPose = PoseStorage.loadPose();
+
         telemetry.addData("Status", "Initialized");
-        telemetry.addData("Selected start", "(%.1f, %.1f, %.0f deg)",
+        telemetry.addData("Selected starting position", "(%.1f, %.1f, %.0f deg)",
                 selectedStartPose.getX(), selectedStartPose.getY(),
                 Math.toDegrees(selectedStartPose.getHeading()));
-        telemetry.addLine("Select starting position using d-pad");
+        telemetry.addLine("⬅︎ Bottom left (9, 9, 90°)  |  ⮕ Bottom right (135, 9, 90°)");
+        telemetry.addData("⬇︎ Saved Pose", "(%.2f, %.2f, %.0f°)",
+                savedPose.getX(), savedPose.getY(),
+                Math.toDegrees(savedPose.getHeading()));
         telemetry.update();
     }
 }

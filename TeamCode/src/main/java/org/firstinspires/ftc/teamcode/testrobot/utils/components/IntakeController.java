@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.testrobot.utils.components;
 
 import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.INTAKE_POWER;
 
+import static java.lang.Math.abs;
+
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -24,6 +26,12 @@ public final class IntakeController {
 
     public void setPower(double power) {
         intakeMotor.setPower(power);
+        isOn = abs(power) > 0;
+    }
+
+    public void turnOn(){
+        intakeMotor.setPower(INTAKE_POWER);
+        isOn = true;
     }
 
     public void turnOn(boolean reversed){
