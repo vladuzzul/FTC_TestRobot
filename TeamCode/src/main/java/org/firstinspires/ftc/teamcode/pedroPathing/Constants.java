@@ -22,8 +22,8 @@ public class Constants {
             new PinpointConstants()
                     .hardwareMapName("pinpoint")
                     .distanceUnit(DistanceUnit.INCH)
-                    .forwardPodY(2.204)
-                    .strafePodX(-4.4133)
+                    .forwardPodY(-1.88976378)
+                    .strafePodX(5.35433071)
                     .encoderResolution(
                             GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
                     .forwardEncoderDirection(

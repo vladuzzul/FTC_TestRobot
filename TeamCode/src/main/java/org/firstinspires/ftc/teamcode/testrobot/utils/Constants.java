@@ -12,6 +12,8 @@ public final class Constants {
     public static double BLUE_BASKET_X = 16.36;
     public static double RED_BASKET_X = 127.64;
 
+    public static double INTAKE_POWER = 0.3;
+
     private Constants() {
     }
 

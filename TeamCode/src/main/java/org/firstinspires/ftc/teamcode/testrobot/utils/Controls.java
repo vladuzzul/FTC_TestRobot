@@ -20,6 +20,12 @@ public final class Controls {
     public final Button leftStickButton = new Button();
     public final Button rightStickButton = new Button();
 
+    public final Button leftBumper = new Button();
+    public final Button rightBumper = new Button();
+
+    public final Trigger rightTrigger = new Trigger();
+    public final Trigger leftTrigger = new Trigger();
+
     private static final int RGB_STEPS = 24;
     private static final int RGB_STEP_MS = 75;
     private static final Gamepad.LedEffect RGB_EFFECT = buildRgbEffect();
@@ -64,6 +70,11 @@ public final class Controls {
         dpadUp.update(gamepad.dpad_up);
         leftStickButton.update(gamepad.left_stick_button);
         rightStickButton.update(gamepad.right_stick_button);
+        leftBumper.update(gamepad.left_bumper);
+        rightBumper.update(gamepad.right_bumper);
+
+        leftTrigger.update(gamepad.left_trigger);
+        rightTrigger.update(gamepad.right_trigger);
 
 
         leftStickX = gamepad.left_stick_x;
@@ -86,6 +97,43 @@ public final class Controls {
 
         public boolean justPressed() {
             return current && !previous;
+        }
+
+    }
+    public static final class Trigger {
+        private static final double PRESS_THRESHOLD = 0.10;
+
+        private double previousValue;
+        private double currentValue;
+        private boolean previousPressed;
+        private boolean currentPressed;
+
+        private void update(double value) {
+            previousValue = currentValue;
+            previousPressed = currentPressed;
+
+            currentValue = Math.max(0.0, Math.min(1.0, value));
+            currentPressed = currentValue >= PRESS_THRESHOLD;
+        }
+
+        public double getValue() {
+            return currentValue;
+        }
+
+        public boolean pressed() {
+            return currentPressed;
+        }
+
+        public boolean justPressed() {
+            return currentPressed && !previousPressed;
+        }
+
+        public boolean justReleased() {
+            return !currentPressed && previousPressed;
+        }
+
+        public double delta() {
+            return currentValue - previousValue;
         }
 
     }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.testrobot.baseOps;
 
+import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.INTAKE_POWER;
+
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -39,7 +41,6 @@ public abstract class MainTeleOp extends OpMode {
             selectedStartPose = PoseStorage.loadPose();
             robot.setPose(selectedStartPose);
         }
-
         robot.updateAllSystems();
         initTelemetry();
     }
@@ -89,6 +90,15 @@ public abstract class MainTeleOp extends OpMode {
                 robot.follower.setPose(AutonomousConstants.rightStartPose());
             }
         }
+//        if (controls.leftBumper.pressed()){
+//            robot.intake.setPower(INTAKE_POWER);
+//        }
+//        else if (controls.rightBumper.pressed()){
+//            robot.intake.setPower(-INTAKE_POWER);
+//        }
+//        else{
+//            robot.intake.setPower(0);
+//        }
 
         robot.drive.runManual(controls);
         onRobotLoop();
@@ -96,6 +106,7 @@ public abstract class MainTeleOp extends OpMode {
         onRobotUpdated();
 
         robot.drive.telemetry(telemetry);
+//        robot.intake.telemetry(telemetry);
         telemetry.addLine("A -> Go to center, B -> Manual");
         telemetry.update();
     }
