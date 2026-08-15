@@ -90,14 +90,18 @@ public abstract class MainTeleOp extends OpMode {
                 robot.follower.setPose(AutonomousConstants.rightStartPose());
             }
         }
-//        if (controls.leftBumper.pressed()){
-//            robot.intake.setPower(INTAKE_POWER);
+        /// Uncomment to enable the intake
+//        if (controls.rightBumper.justPressed() && !robot.intake.isOn()){
+//            robot.intake.toggleIntake(false);
 //        }
-//        else if (controls.rightBumper.pressed()){
-//            robot.intake.setPower(-INTAKE_POWER);
+//        else if (controls.rightBumper.justPressed() && robot.intake.isOn()){
+//            robot.intake.turnOff();
 //        }
-//        else{
-//            robot.intake.setPower(0);
+//        if (controls.rightBumper.justPressed()){
+//            robot.intake.toggleIntake(true);
+//        }
+//        else if (controls.leftBumper.justPressed() && !robot.intake.isOn()) {
+//            robot.intake.turnOff();
 //        }
 
         robot.drive.runManual(controls);
@@ -107,7 +111,8 @@ public abstract class MainTeleOp extends OpMode {
 
         robot.drive.telemetry(telemetry);
 //        robot.intake.telemetry(telemetry);
-        telemetry.addLine("A -> Go to center, B -> Manual");
+        telemetry.addLine("X -> Go to center          O -> Manual");
+        telemetry.addLine("□ -> Toggle aiming target  △ -> Toggle field centric");
         telemetry.update();
     }
 

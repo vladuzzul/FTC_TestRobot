@@ -4,17 +4,20 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.testrobot.utils.components.DriveController;
-import org.firstinspires.ftc.teamcode.testrobot.utils.components.Intake;
+import org.firstinspires.ftc.teamcode.testrobot.utils.components.IntakeController;
 
 public final class Robot extends TestRobot {
     private static Robot instance;
 
     public final DriveController drive;
-//    public final Intake intake;
+
+    /// Uncomment to enable the intake
+//    public final IntakeController intake;
 
     private Robot() {
         drive = new DriveController(this);
-//        intake = new Intake();
+        /// Uncomment to enable the intake
+//        intake = new IntakeController();
     }
 
     public static Robot getInstance() {
@@ -27,6 +30,7 @@ public final class Robot extends TestRobot {
     public void init(HardwareMap hardwareMap, Pose startingPose) {
         initFollower(hardwareMap, startingPose);
         drive.init();
+        /// Uncomment to enable the intake
 //        intake.init(hardwareMap);
     }
 
