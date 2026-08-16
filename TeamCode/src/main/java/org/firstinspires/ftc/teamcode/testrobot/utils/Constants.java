@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.testrobot.utils;
 
+import com.bylazar.configurables.annotations.Configurable;
+
 /** Constants shared by TestRobot OpModes and components. */
+@Configurable
 public final class Constants {
     public static final String MAIN_GROUP = "TestRobot";
 
