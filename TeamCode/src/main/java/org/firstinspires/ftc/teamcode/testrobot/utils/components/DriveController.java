@@ -1,8 +1,13 @@
 package org.firstinspires.ftc.teamcode.testrobot.utils.components;
 
+import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_INTEGRAL_LIMIT;
+import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_KI;
 import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.BLUE_BASKET_X;
 import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.COMMON_BASKET_Y;
 import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.RED_BASKET_X;
+import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_KP;
+import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_KD;
+import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_DEADBAND_RAD;
 
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -27,8 +32,11 @@ public final class DriveController {
     private double targetX;
     private double targetY;
 
-    private static final double AIM_KP = 1.0;
-    private static final double AIM_DEADBAND_RAD = Math.toRadians(2.0);
+    private double integral = 0;
+    private double lastError = 0;
+    private long lastTime = System.nanoTime();
+    private boolean hasLastAimError = false;
+
 
     public DriveController(Robot robot) {
         this.robot = robot;
@@ -130,11 +138,13 @@ public final class DriveController {
         }
 
         targetY = COMMON_BASKET_Y;
+        resetAimPid();
         aimingAtTarget = true;
     }
 
     public void stopAiming() {
         aimingAtTarget = false;
+        resetAimPid();
     }
 
     public boolean isAiming(){
@@ -144,6 +154,7 @@ public final class DriveController {
     public void toggleAimingTarget(){
         aimingAtBlue = !aimingAtBlue;
         targetX = aimingAtBlue ? BLUE_BASKET_X : RED_BASKET_X;
+        resetAimPid();
     }
 
     private double getAimTurn() {
@@ -151,16 +162,59 @@ public final class DriveController {
 
         double desiredHeading = Math.atan2(
                 targetY - pose.getY(),
-                targetX - pose.getX());
+                targetX - pose.getX()
+        );
 
         double error = Math.atan2(
                 Math.sin(desiredHeading - pose.getHeading()),
-                Math.cos(desiredHeading - pose.getHeading()));
+                Math.cos(desiredHeading - pose.getHeading())
+        );
 
         if (Math.abs(error) < AIM_DEADBAND_RAD) {
+            integral = 0.0;
+            lastError = error;
+            hasLastAimError = true;
             return 0.0;
         }
 
-        return Math.max(-1.0, Math.min(1.0, AIM_KP * error));
+        long now = System.nanoTime();
+        double dt = (now - lastTime) / 1e9;
+        lastTime = now;
+
+        if (dt <= 0 || dt > 0.1) {
+            dt = 0.01;
+        }
+
+        integral += error * dt;
+        integral = Math.max(
+                -AIM_INTEGRAL_LIMIT,
+                Math.min(AIM_INTEGRAL_LIMIT, integral)
+        );
+
+        double derivative = 0.0;
+        if (hasLastAimError) {
+            double errorDelta = Math.atan2(
+                    Math.sin(error - lastError),
+                    Math.cos(error - lastError)
+            );
+            derivative = errorDelta / dt;
+        }
+
+        lastError = error;
+        hasLastAimError = true;
+
+        double output =
+                AIM_KP * error
+                + AIM_KI * integral
+                + AIM_KD * derivative;
+
+        return Math.max(-1.0, Math.min(1.0, output));
+    }
+
+    private void resetAimPid() {
+        integral = 0.0;
+        lastError = 0.0;
+        lastTime = System.nanoTime();
+        hasLastAimError = false;
     }
 }

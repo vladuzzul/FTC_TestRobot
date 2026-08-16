@@ -4,14 +4,22 @@ package org.firstinspires.ftc.teamcode.testrobot.utils;
 public final class Constants {
     public static final String MAIN_GROUP = "TestRobot";
 
+    /// DRIVETRAIN CONSTANTS
     public static double CONTROLLER_DEADZONE = 0.05;
     public static double MANUAL_SPEED = 1.0;
     public static double PATH_MAX_POWER = 1;
 
+    /// HEADING CONSTANTS
     public static double COMMON_BASKET_Y = 130.34;
     public static double BLUE_BASKET_X = 16.36;
     public static double RED_BASKET_X = 127.64;
+    public static double AIM_KP = 1.0;
+    public static double AIM_KI = 0.0;
+    public static double AIM_KD = 0.05;
+    public static double AIM_DEADBAND_RAD = Math.toRadians(2.0);
+    public static double AIM_INTEGRAL_LIMIT = 0.5;
 
+    /// COMPONENTS CONSTANTS
     public static double INTAKE_POWER = 0.3;
 
     private Constants() {
