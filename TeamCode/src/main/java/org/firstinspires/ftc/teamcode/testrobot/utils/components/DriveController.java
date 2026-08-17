@@ -9,7 +9,6 @@ import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_KP;
 import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_KD;
 import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_DEADBAND_RAD;
 
-import com.bylazar.panels.Panels;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -211,10 +210,7 @@ public final class DriveController {
                 AIM_KP * error
                 + AIM_KI * integral
                 + AIM_KD * derivative;
-        panelsTelemetry.addData("Aim Error", error);
-        panelsTelemetry.addData("Aim Desired", desiredHeading);
-        panelsTelemetry.addData("Aim Output", output);
-        panelsTelemetry.update();
+        sendPanelsTelemetry(error, desiredHeading, output);
         return Math.max(-1.0, Math.min(1.0, output));
     }
 
@@ -223,5 +219,12 @@ public final class DriveController {
         lastError = 0.0;
         lastTime = System.nanoTime();
         hasLastAimError = false;
+    }
+
+    private void sendPanelsTelemetry(double error, double desiredHeading, double output){
+        panelsTelemetry.addData("Aim Error", error);
+        panelsTelemetry.addData("Aim Desired", desiredHeading);
+        panelsTelemetry.addData("Aim Output", output);
+        panelsTelemetry.update();
     }
 }
