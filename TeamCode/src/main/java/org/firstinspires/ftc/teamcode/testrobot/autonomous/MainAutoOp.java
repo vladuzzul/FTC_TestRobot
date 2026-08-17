@@ -18,12 +18,12 @@ public class MainAutoOp extends BaseAuto {
 
     private int pathState = -1;
     private final ElapsedTime stateTimer = new ElapsedTime();
-
+    private final ElapsedTime totalTimer = new ElapsedTime();
 
 
     private final Pose startingPose = new Pose(79.5, 9, Math.toRadians(90));
 
-    private final Pose forwardPose = new Pose(79.5, 130, Math.toRadians(90));
+//    private final Pose forwardPose = new Pose(79.5, 130, Math.toRadians(90));
     private final Pose launchZone = new Pose(90, 115, Math.toRadians(40));
     private final Pose intake10 = new Pose(106, 34.5, Math.toRadians(0));
     private final Pose intake11 = new Pose(130, 34.5, Math.toRadians(0));
@@ -114,10 +114,15 @@ public class MainAutoOp extends BaseAuto {
     @Override
     public void onAutoStart() {
         setPathState(0);
+        totalTimer.reset();
     }
 
     @Override
     protected void onAutoLoop() {
+        if (totalTimer.seconds() > 25 && pathState >= 1 && pathState <= 12) {
+            robot.drive.driveTo(parkingPose);
+            setPathState(13);
+        }
         switch (pathState) {
             case 0:
                 robot.follower.followPath(goToIntake1, PATH_MAX_POWER, true);
