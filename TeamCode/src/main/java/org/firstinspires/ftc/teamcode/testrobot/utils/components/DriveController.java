@@ -9,6 +9,8 @@ import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_KP;
 import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_KD;
 import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_DEADBAND_RAD;
 
+import com.bylazar.panels.Panels;
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -17,6 +19,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.testrobot.Robot;
 import org.firstinspires.ftc.teamcode.testrobot.utils.Constants;
 import org.firstinspires.ftc.teamcode.testrobot.utils.Controls;
+
+import com.bylazar.telemetry.PanelsTelemetry;
 
 /** Manual mecanum control and PedroPathing movement commands. */
 public final class DriveController {
@@ -36,7 +40,7 @@ public final class DriveController {
     private double lastError = 0;
     private long lastTime = System.nanoTime();
     private boolean hasLastAimError = false;
-
+    private final TelemetryManager panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
     public DriveController(Robot robot) {
         this.robot = robot;
@@ -207,7 +211,10 @@ public final class DriveController {
                 AIM_KP * error
                 + AIM_KI * integral
                 + AIM_KD * derivative;
-
+        panelsTelemetry.addData("Aim Error", error);
+        panelsTelemetry.addData("Aim Desired", desiredHeading);
+        panelsTelemetry.addData("Aim Output", output);
+        panelsTelemetry.update();
         return Math.max(-1.0, Math.min(1.0, output));
     }
 
