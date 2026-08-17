@@ -35,6 +35,7 @@ public abstract class BaseAuto extends OpMode {
     public void loop() {
         onAutoLoop();
         robot.updateAllSystems();
+        telemetry.addData("Lps:", "%.0f", robot.lpsCounter.getLoopTime());
         robot.drive.telemetry(telemetry);
         telemetry.update();
     }

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.testrobot;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.testrobot.misc.LpsCounter;
 import org.firstinspires.ftc.teamcode.testrobot.utils.components.DriveController;
 import org.firstinspires.ftc.teamcode.testrobot.utils.components.IntakeController;
 
@@ -11,11 +12,14 @@ public final class Robot extends TestRobot {
 
     public final DriveController drive;
 
+    public final LpsCounter lpsCounter;
+
     /// Uncomment to enable the intake
 //    public final IntakeController intake;
 
     private Robot() {
         drive = new DriveController(this);
+        lpsCounter = new LpsCounter();
         /// Uncomment to enable the intake
 //        intake = new IntakeController();
     }

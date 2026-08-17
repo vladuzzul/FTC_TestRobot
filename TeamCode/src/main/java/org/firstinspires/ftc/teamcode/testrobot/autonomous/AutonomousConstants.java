@@ -18,7 +18,7 @@ public final class AutonomousConstants {
     public static double CENTER_Y = 72.0;
     public static double CENTER_HEADING_DEG = 90.0;
 
-    public static double TIMEOUT_FAILSAFE = 20.0;
+    public static double TIMEOUT_FAILSAFE = 5.0;
 
     private AutonomousConstants() {
     }
