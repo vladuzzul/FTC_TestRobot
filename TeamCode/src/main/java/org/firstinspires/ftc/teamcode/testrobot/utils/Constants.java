@@ -10,7 +10,7 @@ public final class Constants {
     /// DRIVETRAIN CONSTANTS
     public static double CONTROLLER_DEADZONE = 0.05;
     public static double MANUAL_SPEED = 1.0;
-    public static double PATH_MAX_POWER = 1;
+    public static double PATH_MAX_POWER = 0.8;
 
     /// HEADING CONSTANTS
     public static double COMMON_BASKET_Y = 130.34;

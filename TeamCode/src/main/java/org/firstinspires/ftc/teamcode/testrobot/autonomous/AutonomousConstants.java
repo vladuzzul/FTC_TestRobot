@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.testrobot.autonomous;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.geometry.Pose;
 
 /** Field coordinates used by autonomous and assisted TeleOp movement. */
+@Configurable
 public final class AutonomousConstants {
     public static double LEFT_START_X = 9.0;
     public static double LEFT_START_Y = 9.0;
@@ -15,6 +17,8 @@ public final class AutonomousConstants {
     public static double CENTER_X = 72.0;
     public static double CENTER_Y = 72.0;
     public static double CENTER_HEADING_DEG = 90.0;
+
+    public static double TIMEOUT_FAILSAFE = 20.0;
 
     private AutonomousConstants() {
     }
