@@ -1,5 +1,11 @@
 package org.firstinspires.ftc.teamcode.testrobot.autonomous;
 
+import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_DEADBAND_RAD;
+import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_INTEGRAL_LIMIT;
+import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_KD;
+import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_KI;
+import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.AIM_KP;
+
 import android.os.Environment;
 
 import com.pedropathing.geometry.Pose;
@@ -30,8 +36,6 @@ public class ReplayOp extends LinearOpMode {
     private static final int MODE_MANUAL = 0;
     private static final int MODE_FOLLOWING_PATH = 1;
     private static final int MODE_HOLDING_POSE = 2;
-
-    // Conservative correction values. Tune these on the real robot if needed.
     private static final double TRANSLATION_KP = 0.022;
     private static final double TRANSLATION_KD = 0.013;
     private static final double ROTATION_KP = 0.30;
@@ -43,8 +47,13 @@ public class ReplayOp extends LinearOpMode {
     private static final double MAX_VOLTAGE_SCALE = 1.10;
     private static final double VOLTAGE_REFRESH_SEC = 0.10;
     private static final double MIN_DT = 0.008;
-    private static final double AIM_KP = 1.0;
-    private static final double AIM_DEADBAND_RAD = Math.toRadians(2.0);
+    static private double integral = 0;
+    static private double lastError = 0;
+    static private long lastTime = System.nanoTime();
+    static private boolean hasLastAimError = false;
+
+    static private boolean prevAiming = false;
+    static private boolean prevTargetBlue = false;
 
     private final Robot robot = Robot.getInstance();
     private final List<RobotFrame> frames = new ArrayList<>();
@@ -198,6 +207,14 @@ public class ReplayOp extends LinearOpMode {
                     + (fieldCentric ? correctionFieldX : correctionForward);
             double commandStrafe = feedforward.strafe
                     + (fieldCentric ? correctionFieldY : correctionStrafe);
+            if (!aimingAtTarget && prevAiming) {
+                resetAimPid();
+                prevAiming = aimingAtTarget;
+            }
+            if (!a.aimingAtBlue && prevTargetBlue){
+                resetAimPid();
+                prevTargetBlue = a.aimingAtBlue;
+            }
             double commandTurn = Range.clip(
                     (aimingAtTarget ? aimTurn(currentPose, a.aimingAtBlue)
                             : feedforward.turn) + correctionTurn,
@@ -379,9 +396,51 @@ public class ReplayOp extends LinearOpMode {
         double error = normalizeAngle(desiredHeading - pose.getHeading());
 
         if (Math.abs(error) < AIM_DEADBAND_RAD) {
-            return 0;
+            integral = 0.0;
+            lastError = error;
+            hasLastAimError = true;
+            return 0.0;
         }
-        return Range.clip(AIM_KP * error, -1, 1);
+
+        long now = System.nanoTime();
+        double dt = (now - lastTime) / 1e9;
+        lastTime = now;
+
+        if (dt <= 0 || dt > 0.1) {
+            dt = 0.01;
+        }
+
+        integral += error * dt;
+        integral = Math.max(
+                -AIM_INTEGRAL_LIMIT,
+                Math.min(AIM_INTEGRAL_LIMIT, integral)
+        );
+
+        double derivative = 0.0;
+        if (hasLastAimError) {
+            double errorDelta = Math.atan2(
+                    Math.sin(error - lastError),
+                    Math.cos(error - lastError)
+            );
+            derivative = errorDelta / dt;
+        }
+
+        lastError = error;
+        hasLastAimError = true;
+
+        double output =
+                AIM_KP * error
+                        + AIM_KI * integral
+                        + AIM_KD * derivative;
+
+        return Range.clip(output, -1, 1);
+    }
+
+    private void resetAimPid() {
+        integral = 0.0;
+        lastError = 0.0;
+        lastTime = System.nanoTime();
+        hasLastAimError = false;
     }
 
     private static double lerp(double a, double b, double amount) {

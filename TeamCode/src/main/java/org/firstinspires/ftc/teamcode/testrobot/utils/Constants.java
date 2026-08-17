@@ -16,10 +16,10 @@ public final class Constants {
     public static double COMMON_BASKET_Y = 130.34;
     public static double BLUE_BASKET_X = 16.36;
     public static double RED_BASKET_X = 127.64;
-    public static double AIM_KP = 1.0;
-    public static double AIM_KI = 0.0;
-    public static double AIM_KD = 0.05;
-    public static double AIM_DEADBAND_RAD = Math.toRadians(2.0);
+    public static double AIM_KP = 1.3;
+    public static double AIM_KI = 0.2;
+    public static double AIM_KD = 0.1;
+    public static double AIM_DEADBAND_RAD = Math.toRadians(1.5);
     public static double AIM_INTEGRAL_LIMIT = 0.5;
 
     /// COMPONENTS CONSTANTS
