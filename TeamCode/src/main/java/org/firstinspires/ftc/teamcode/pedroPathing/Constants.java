@@ -22,14 +22,14 @@ public class Constants {
             new PinpointConstants()
                     .hardwareMapName("pinpoint")
                     .distanceUnit(DistanceUnit.INCH)
-                    .forwardPodY(-1.88976378)
-                    .strafePodX(5.35433071)
+                    .forwardPodY(2.86)lxc
+                    .strafePodX(-5.35433071) //-5.385
                     .encoderResolution(
                             GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
                     .forwardEncoderDirection(
-                            GoBildaPinpointDriver.EncoderDirection.FORWARD)
+                            GoBildaPinpointDriver.EncoderDirection.REVERSED)
                     .strafeEncoderDirection(
-                            GoBildaPinpointDriver.EncoderDirection.REVERSED);
+                            GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
     public static PathConstraints pathConstraints =
             new PathConstraints(0.99, 100, 1, 1);

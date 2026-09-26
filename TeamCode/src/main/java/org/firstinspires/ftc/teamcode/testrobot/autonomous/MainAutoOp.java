@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.testrobot.autonomous;
 
-import static org.firstinspires.ftc.teamcode.testrobot.autonomous.AutonomousConstants.TIMEOUT_FAILSAFE;
+import static org.firstinspires.ftc.teamcode.testrobot.autonomous.AutonomousConstants.PARKING_FAILSAFE;
+import static org.firstinspires.ftc.teamcode.testrobot.autonomous.AutonomousConstants.STEP_FAILSAFE;
 import static org.firstinspires.ftc.teamcode.testrobot.utils.Constants.PATH_MAX_POWER;
 
 import com.pedropathing.geometry.BezierLine;
@@ -119,7 +120,7 @@ public class MainAutoOp extends BaseAuto {
 
     @Override
     protected void onAutoLoop() {
-        if (totalTimer.seconds() > 25 && pathState >= 1 && pathState <= 12) {
+        if (totalTimer.seconds() > PARKING_FAILSAFE && pathState >= 1 && pathState <= 12) {
             robot.drive.driveTo(parkingPose);
             setPathState(13);
         }
@@ -129,79 +130,79 @@ public class MainAutoOp extends BaseAuto {
                 setPathState(1);
                 break;
             case 1:
-                if (canTransition(intake10, TIMEOUT_FAILSAFE)) {
+                if (canTransition(intake10, STEP_FAILSAFE)) {
                     robot.follower.followPath(goIntake1, PATH_MAX_POWER, true);
                     setPathState(2);
                 }
                 break;
             case 2:
-                if (canTransition(intake11, TIMEOUT_FAILSAFE)) {
+                if (canTransition(intake11, STEP_FAILSAFE)) {
                     robot.follower.followPath(goIntake10, PATH_MAX_POWER, true);
                     setPathState(3);
                 }
                 break;
             case 3:
-                if (canTransition(intake10, TIMEOUT_FAILSAFE)) {
+                if (canTransition(intake10, STEP_FAILSAFE)) {
                     robot.follower.followPath(goToLaunch1, PATH_MAX_POWER, true);
                     setPathState(4);
                 }
                 break;
             case 4:
-                if (canTransition(launchZone, TIMEOUT_FAILSAFE)) {
+                if (canTransition(launchZone, STEP_FAILSAFE)) {
                     robot.follower.followPath(goToIntake2, PATH_MAX_POWER, true);
                     setPathState(5);
                 }
                 break;
             case 5:
-                if (canTransition(intake20, TIMEOUT_FAILSAFE)) {
+                if (canTransition(intake20, STEP_FAILSAFE)) {
                     robot.follower.followPath(goIntake2, PATH_MAX_POWER, true);
                     setPathState(6);
                 }
                 break;
             case 6:
-                if (canTransition(intake21, TIMEOUT_FAILSAFE)) {
+                if (canTransition(intake21, STEP_FAILSAFE)) {
                     robot.follower.followPath(goIntake20, PATH_MAX_POWER, true);
                     setPathState(7);
                 }
                 break;
             case 7:
-                if (canTransition(intake20, TIMEOUT_FAILSAFE)) {
+                if (canTransition(intake20, STEP_FAILSAFE)) {
                     robot.follower.followPath(goToLaunch2, PATH_MAX_POWER, true);
                     setPathState(8);
                 }
                 break;
             case 8:
-                if (canTransition(launchZone, TIMEOUT_FAILSAFE)) {
+                if (canTransition(launchZone, STEP_FAILSAFE)) {
                     robot.follower.followPath(goToIntake3, PATH_MAX_POWER, true);
                     setPathState(9);
                 }
                 break;
             case 9:
-                if (canTransition(intake30, TIMEOUT_FAILSAFE)) {
+                if (canTransition(intake30, STEP_FAILSAFE)) {
                     robot.follower.followPath(goIntake3, PATH_MAX_POWER, true);
                     setPathState(10);
                 }
                 break;
             case 10:
-                if (canTransition(intake31, TIMEOUT_FAILSAFE)) {
+                if (canTransition(intake31, STEP_FAILSAFE)) {
                     robot.follower.followPath(goIntake30, PATH_MAX_POWER, true);
                     setPathState(11);
                 }
                 break;
             case 11:
-                if (canTransition(intake30, TIMEOUT_FAILSAFE)) {
+                if (canTransition(intake30, STEP_FAILSAFE)) {
                     robot.follower.followPath(goToLaunch3, PATH_MAX_POWER, true);
                     setPathState(12);
                 }
                 break;
             case 12:
-                if (canTransition(launchZone, TIMEOUT_FAILSAFE)) {
+                if (canTransition(launchZone, STEP_FAILSAFE)) {
                     robot.follower.followPath(gotToStart, PATH_MAX_POWER, true);
                     setPathState(13);
                 }
                 break;
             case 13:
-                if (canTransition(parkingPose, TIMEOUT_FAILSAFE)) {
+                if (canTransition(parkingPose, STEP_FAILSAFE)) {
                     setPathState(-1);
                 }
                 break;

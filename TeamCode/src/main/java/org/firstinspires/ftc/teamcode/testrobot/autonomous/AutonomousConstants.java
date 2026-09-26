@@ -18,7 +18,9 @@ public final class AutonomousConstants {
     public static double CENTER_Y = 72.0;
     public static double CENTER_HEADING_DEG = 90.0;
 
-    public static double TIMEOUT_FAILSAFE = 5.0;
+    public static double STEP_FAILSAFE = 5.0;
+
+    public static double PARKING_FAILSAFE = 25.0;
 
     private AutonomousConstants() {
     }
