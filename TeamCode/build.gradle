@@ -25,4 +25,14 @@ android {
 
 dependencies {
     implementation project(':FtcRobotController')
+    // NextFTC v2 modules are kept on the same published release. Robot includes Ivy commands.
+    implementation 'dev.nextftc.v2:control:0.2.1'
+    implementation 'dev.nextftc.v2:hardware:0.2.1'
+    implementation 'dev.nextftc.v2:robot:0.2.1'
+    testImplementation 'junit:junit:4.13.2'
+}
+
+repositories {
+    // NextFTC's runtime class scanner (Sinister/Sloth).
+    maven { url = 'https://repo.dairy.foundation/releases' }
 }

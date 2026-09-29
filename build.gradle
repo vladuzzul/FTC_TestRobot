@@ -10,7 +10,9 @@ buildscript {
         google()
     }
     dependencies {
-        // Note for FTC Teams: Do not modify this yourself.
+        // NextFTC's Sloth scanner uses Kotlin 2.4; override D8/R8 with a compatible release.
+        classpath 'com.android.tools:r8:9.1.31'
+        // Keep the FTC project's Android plugin and Gradle wrapper unchanged.
         classpath 'com.android.tools.build:gradle:8.7.0'
     }
 }

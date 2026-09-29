@@ -1,3 +1,5 @@
+TestRobot now uses NextFTC v2. See [the migration and codebase guide](docs/NEXTFTC_MIGRATION.md) for architecture, controls, dependencies, and verification.
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the DECODE (2025-2026) competition season.
